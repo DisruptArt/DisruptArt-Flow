@@ -6,8 +6,9 @@
 // Blockchain      : Flow www.onFlow.org
 
 
-// FUSD FUNGIBLE TOKEN
-import FungibleToken from 0x9a0766d93b6608b7
+// FUSD FUNGIBLE TOKEN mainnet
+import FungibleToken from 0x3c5959b568896393
+// Testnet wallet address
 import DisruptArt from 0x1592be4ab7835516
 
 // This contract allows users to list their DisruptArt NFT for sale. 

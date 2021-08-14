@@ -1,7 +1,7 @@
 # DisruptArt.io NFT Marketplace Smart Contracts
     NFT Token and Marketplace smart contracts of DisruptArt.io
 
-    Owner : Disruption Now Media LLC - https://www.disruptionnow.com
+    Owner : Disrupt Art, INC. https://www.DisruptArt.io
     NFT Marketplace : https://www.DisruptArt.io/nft
     Developer : https://www.BLAZE.ws
 

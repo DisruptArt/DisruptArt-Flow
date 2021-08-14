@@ -1,6 +1,6 @@
 // DisruptArt Marketplace Smart Contract
 // NFT Marketplace : www.DisruptArt.io
-// Owner           : Disruption Now Media LLC - www.disruptionnow.com
+// Owner           : Disrupt Art, INC.
 // Developer       : www.blaze.ws
 // Version         : 0.0.3
 // Blockchain      : Flow www.onFlow.org

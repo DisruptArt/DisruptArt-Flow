@@ -13,7 +13,7 @@ pub contract DisruptArt: NonFungibleToken {
     // Total number of token supply
     pub var totalSupply: UInt64
     // Total number of token groups
-    pub var tokenGroup: UInt64
+    pub var tokenGroupsCount: UInt64
     // NFT No of Editions(Multiple copies) limit
     pub var editionLimit: UInt
     
@@ -22,7 +22,7 @@ pub contract DisruptArt: NonFungibleToken {
     pub event Withdraw(id: UInt64, from: Address?)
     pub event Deposit(id: UInt64, to: Address?)
     pub event Mint(id: UInt64, content:String, owner: Address?, name:String)
-    pub event GroupMint(id: UInt64, content:String, owner: Address?, name:String, tokenGroup: UInt64 )
+    pub event GroupMint(id: UInt64, content:String, owner: Address?, name:String, tokenGroupId: UInt64 )
 
 
     // TOKEN RESOURCE
@@ -116,14 +116,14 @@ pub contract DisruptArt: NonFungibleToken {
                 edition >=2 : "Edition count should be greater than or equal to 2"
             }
             var count = 0 as UInt
+            DisruptArt.tokenGroupsCount = DisruptArt.tokenGroupsCount + 1 as UInt64
             while count < edition {
                 let token <- create NFT(id: DisruptArt.totalSupply, content:content, name:name, description:description, creator: recipient.owner?.address)
-                emit GroupMint(id:DisruptArt.totalSupply,content:content,owner: recipient.owner?.address, name:name, tokenGroup:DisruptArt.tokenGroup)
+                emit GroupMint(id:DisruptArt.totalSupply,content:content,owner: recipient.owner?.address, name:name, tokenGroupId:DisruptArt.tokenGroupsCount)
                 recipient.deposit(token: <- token)
                 DisruptArt.totalSupply = DisruptArt.totalSupply + 1 as UInt64
                 count = count + 1
             }
-            DisruptArt.tokenGroup = DisruptArt.tokenGroup + 1 as UInt64
         }
 
         pub fun Mint(recipient: &{NFTPublicCollection},content:String, name:String, description:String) {
@@ -156,7 +156,7 @@ pub contract DisruptArt: NonFungibleToken {
         // total supply is zero at the time of contract deployment
         self.totalSupply = 0
 
-        self.tokenGroup = 1
+        self.tokenGroupsCount = 0
 
         self.editionLimit = 50
 

@@ -101,7 +101,7 @@ pub contract DisruptArtMarketplace {
         pre {
             tokens.length > 0:
                 "No Token found. Please provide tokens!"
-            self.tokenExists(tokens: tokens, ids: sellerRef.getIDs()):
+            self.tokensExist(tokens: tokens, ids: sellerRef.getIDs()):
                 "Token is not available!"
         }
 
@@ -138,7 +138,7 @@ pub contract DisruptArtMarketplace {
         pre {
             tokens.length > 0:
                 "Please provide tokens!"
-            self.tokenExists(tokens:tokens, ids: self.forSale.keys):
+            self.tokensExist(tokens:tokens, ids: self.forSale.keys):
                 "Tokens not available"
         }
         var count = 0
@@ -149,7 +149,7 @@ pub contract DisruptArtMarketplace {
         }
     }
 
-    pub fun tokenExists(tokens: [UInt64], ids: [UInt64]):Bool {
+    pub fun tokensExist(tokens: [UInt64], ids: [UInt64]):Bool {
         var count = 0
         // let ids = self.forSale.keys
         while count < tokens.length {
@@ -162,7 +162,7 @@ pub contract DisruptArtMarketplace {
         return true
     }
 
-    pub fun tokenTotalPrice(tokens: [UInt64]):UFix64 {
+    pub fun tokensTotalPrice(tokens: [UInt64]):UFix64 {
         var count = 0
         var price:UFix64 = 0.0 
         while count < tokens.length {
@@ -178,9 +178,9 @@ pub contract DisruptArtMarketplace {
         pre {
             tokens.length > 0:
                 "Please provide tokens!"
-            self.tokenExists(tokens: tokens, ids: self.forSale.keys):
+            self.tokensExist(tokens: tokens, ids: self.forSale.keys):
                 "Tokens are not available"
-            payment.balance >= self.tokenTotalPrice(tokens:tokens) :
+            payment.balance >= self.tokensTotalPrice(tokens:tokens) :
                 "Not enough FUSD to purchase this NFT token"
         }
 
@@ -290,7 +290,7 @@ pub contract DisruptArtMarketplace {
        pre {
             tokens.length > 0:
                 "Please provide NFT tokens!"
-            self.tokenExists(tokens:tokens, ids: self.forSale.keys):
+            self.tokensExist(tokens:tokens, ids: self.forSale.keys):
                 "Tokens are not available"
        }
 

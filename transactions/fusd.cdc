@@ -1,7 +1,7 @@
 // DisruptArt.io NFT Token Smart Contract
 // Owner     : DisruptionNowMedia www.disruptionnow.com
 // Developer : www.BLAZE.ws
-// Version: 0.0.3
+// Version: 0.0.4
 
 
 // FUSD Setup

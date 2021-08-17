@@ -2,10 +2,11 @@
 // NFT Marketplace : www.DisruptArt.io
 // Owner           : Disrupt Art, INC.
 // Developer       : www.blaze.ws
-// Version         : 0.0.3
+// Version         : 0.0.4
 // Blockchain      : Flow www.onFlow.org
 
-import NonFungibleToken from 0x1592be4ab7835516
+import NonFungibleToken from "./NonFungibleToken.cdc"
+
 
 
 pub contract DisruptArt: NonFungibleToken {
@@ -16,6 +17,12 @@ pub contract DisruptArt: NonFungibleToken {
     pub var tokenGroupsCount: UInt64
     // NFT No of Editions(Multiple copies) limit
     pub var editionLimit: UInt
+
+    /// Path where the `Collection` is stored
+    pub let disruptArtStoragePath: StoragePath
+
+    /// Path where the public capability for the `Collection` is
+    pub let disruptArtPublicPath: PublicPath
     
     // Contract Events
     pub event ContractInitialized()
@@ -32,7 +39,7 @@ pub contract DisruptArt: NonFungibleToken {
         pub let id :UInt64
 
         // Meta data to store token data (use dict for data)
-        pub let metaData: {String : String}
+        access(self) let metaData: {String : String}
 
         // NFT token name
         pub let name:String
@@ -50,7 +57,7 @@ pub contract DisruptArt: NonFungibleToken {
     }
 
     // Account's public collection
-    pub resource interface NFTPublicCollection {
+    pub resource interface DisruptArtCollectionPublic {
 
         pub fun deposit(token:@NonFungibleToken.NFT)
 
@@ -61,7 +68,7 @@ pub contract DisruptArt: NonFungibleToken {
     } 
 
     // NFT Collection resource
-    pub resource Collection : NFTPublicCollection, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
+    pub resource Collection : DisruptArtCollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
         
         // Contains caller's list of NFTs
         pub var ownedNFTs: @{UInt64 : NonFungibleToken.NFT}
@@ -110,7 +117,7 @@ pub contract DisruptArt: NonFungibleToken {
         }
 
         // Function to mint group of tokens
-        pub fun GroupMint(recipient: &{NFTPublicCollection},content:String, description:String, name:String, edition:UInt) {
+        pub fun GroupMint(recipient: &{DisruptArtCollectionPublic},content:String, description:String, name:String, edition:UInt) {
             pre {
                 DisruptArt.editionLimit >= edition : "Edition count exceeds the limit"
                 edition >=2 : "Edition count should be greater than or equal to 2"
@@ -126,7 +133,7 @@ pub contract DisruptArt: NonFungibleToken {
             }
         }
 
-        pub fun Mint(recipient: &{NFTPublicCollection},content:String, name:String, description:String) {
+        pub fun Mint(recipient: &{DisruptArtCollectionPublic},content:String, name:String, description:String) {
             let token <- create NFT(id: DisruptArt.totalSupply, content:content, name:name, description:description, creator: recipient.owner?.address)
             emit Mint(id:DisruptArt.totalSupply,content:content,owner: recipient.owner?.address, name:name)
             recipient.deposit(token: <- token)
@@ -160,9 +167,13 @@ pub contract DisruptArt: NonFungibleToken {
 
         self.editionLimit = 50
 
-        self.account.save(<-self.createEmptyCollection(), to: /storage/DisruptArtNFTCollection)
+        self.disruptArtStoragePath = /storage/DisruptArtNFTCollection
 
-        self.account.link<&{NFTPublicCollection}>(/public/DisruptArtNFTPublicCollection, target:/storage/DisruptArtNFTCollection)
+        self.disruptArtPublicPath = /public/DisruptArtNFTPublicCollection
+
+        self.account.save(<-self.createEmptyCollection(), to: self.disruptArtStoragePath)
+
+        self.account.link<&{DisruptArtCollectionPublic}>(self.disruptArtPublicPath, target:self.disruptArtStoragePath)
 
         self.account.save(<-create self.Admin(), to: /storage/DirsuptArtAdmin)
 

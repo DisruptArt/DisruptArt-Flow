@@ -1,18 +1,18 @@
 // DisruptArt.io NFT Token Smart Contract
 // Owner     : DisruptionNowMedia www.disruptionnow.com
 // Developer : www.BLAZE.ws
-// Version: 0.0.3
+// Version: 0.0.4
 
 
-import DisruptArt from 0x1592be4ab7835516
-import NonFungibleToken from 0x1592be4ab7835516
+import DisruptArt from "../contracts/DisruptArt.cdc"
+import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
 
 //[UInt64] &DisruptNow.NFT
 pub fun main(owner:Address, tokenid:UInt64): &NonFungibleToken.NFT {
 
     let collectionRef = getAccount(owner)
-        .getCapability(/public/DisruptArtNFTPublicCollection)
-        .borrow<&{DisruptArt.NFTPublicCollection}>()
+        .getCapability(DisruptArt.disruptArtPublicPath)
+        .borrow<&{DisruptArt.DisruptArtCollectionPublic}>()
         ?? panic("Could not borrow capability from public collection")
 
     let nft = collectionRef.borrowNFT(id:tokenid)

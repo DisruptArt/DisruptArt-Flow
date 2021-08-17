@@ -2,14 +2,15 @@
 // NFT Marketplace : www.DisruptArt.io
 // Owner           : Disrupt Art, INC.
 // Developer       : www.blaze.ws
-// Version         : 0.0.3
+// Version         : 0.0.4
 // Blockchain      : Flow www.onFlow.org
 
 
 // FUSD FUNGIBLE TOKEN mainnet
-import FungibleToken from 0x3c5959b568896393
+// 
+import FungibleToken from 0x9a0766d93b6608b7
 // Testnet wallet address
-import DisruptArt from 0x1592be4ab7835516
+import DisruptArt from "./DisruptArt.cdc"
 
 // This contract allows users to list their DisruptArt NFT for sale. 
 // Other users can purchase these NFTs with FUSD token.
@@ -35,11 +36,18 @@ pub contract DisruptArtMarketplace {
   // creator royality
   pub var royality : UFix64
 
+  /// Path where the `SaleCollection` is stored
+  pub let marketStoragePath: StoragePath
+
+  /// Path where the public capability for the `SaleCollection` is
+  pub let marketPublicPath: PublicPath
+    
+
   // Interface public methods that are used for NFT sales actions
 
   pub resource interface SalePublic {
-    pub fun purchase(id: UInt64, recipient: &{DisruptArt.NFTPublicCollection}, payment: @FungibleToken.Vault)
-    pub fun purchaseGroup(tokens: [UInt64], recipient: &{DisruptArt.NFTPublicCollection}, payment: @FungibleToken.Vault)
+    pub fun purchase(id: UInt64, recipient: &{DisruptArt.DisruptArtCollectionPublic}, payment: @FungibleToken.Vault)
+    pub fun purchaseGroup(tokens: [UInt64], recipient: &{DisruptArt.DisruptArtCollectionPublic}, payment: @FungibleToken.Vault)
     pub fun idPrice(id: UInt64): UFix64?
     pub fun tokenCreator(id: UInt64): Address??
     pub fun currentTokenOwner(id: UInt64): Address??
@@ -173,7 +181,7 @@ pub contract DisruptArtMarketplace {
     }
 
     // Purchase : Allows am user send FUSD to purchase a NFT that is for sale
-    pub fun purchaseGroup(tokens: [UInt64], recipient: &{DisruptArt.NFTPublicCollection}, payment: @FungibleToken.Vault) {
+    pub fun purchaseGroup(tokens: [UInt64], recipient: &{DisruptArt.DisruptArtCollectionPublic}, payment: @FungibleToken.Vault) {
        
         pre {
             tokens.length > 0:
@@ -203,7 +211,7 @@ pub contract DisruptArtMarketplace {
 
 
     // Purchase: Allows an user to send FUSD to purchase a NFT that is for sale
-    pub fun purchase(id: UInt64, recipient: &{DisruptArt.NFTPublicCollection}, payment: @FungibleToken.Vault) {
+    pub fun purchase(id: UInt64, recipient: &{DisruptArt.DisruptArtCollectionPublic}, payment: @FungibleToken.Vault) {
         pre {
             self.forSale[id] != nil && self.prices[id] != nil:
                 "No token matching this ID for sale!"
@@ -297,8 +305,8 @@ pub contract DisruptArtMarketplace {
        var count = 0
        let owner = self.seller[tokens[0]]!!
        let receiver = getAccount(owner)
-              .getCapability(/public/DisruptArtNFTPublicCollection)
-              .borrow<&{DisruptArt.NFTPublicCollection}>()
+              .getCapability(DisruptArt.disruptArtPublicPath)
+              .borrow<&{DisruptArt.DisruptArtCollectionPublic}>()
                ?? panic("Could not get receiver reference to the NFT Collection")
 
        while count < tokens.length {
@@ -333,6 +341,11 @@ pub contract DisruptArtMarketplace {
     self.marketFee = 5.0
     // 10% Royalty reward for original creater / minter for every re-sale
     self.royality = 10.0
+
+    self.marketPublicPath = /public/DisruptArtNFTSale
+
+    self.marketStoragePath = /storage/DisruptArtNFTSale
+
     self.account.save(<- create Admin(), to:/storage/DisruptArtMarketAdmin)
   } 
 

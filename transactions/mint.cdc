@@ -5,34 +5,18 @@
 
 import DisruptArt from "../contracts/DisruptArt.cdc"
 
-transaction(content:String, description:String, name:String) {
+transaction(content:String, description:String, name:String, receiver:Address) {
 
     // local variable for storing the minter reference
-    let minter: &DisruptArt.Collection
+    let minter: &DisruptArt.NFTMinter
     let receiverAddrss : Address
 
     prepare(signer: AuthAccount) {
 
-        if signer.borrow<&DisruptArt.Collection>(from: DisruptArt.disruptArtStoragePath) == nil {
+       self.minter = signer.borrow<&DisruptArt.NFTMinter>(from: DisruptArt.disruptArtMinterPath)
+            ?? panic("could not borrow minter reference")
 
-            // Create a new empty collection
-            let collection <- DisruptArt.createEmptyCollection()
-
-            // save it to the account
-            signer.save(<-collection, to: DisruptArt.disruptArtStoragePath)
-
-            // create a public capability for the collection
-            signer.link<&{DisruptArt.DisruptArtCollectionPublic}>(
-                    DisruptArt.disruptArtPublicPath,
-                    target: DisruptArt.disruptArtStoragePath
-                    )
-        } 
-
-        // borrow a reference to the NFTMinter resource in storage
-        self.minter = signer.borrow<&DisruptArt.Collection>(from: DisruptArt.disruptArtStoragePath)
-            ?? panic("Could not borrow a reference to the NFT minter")
-
-       self.receiverAddrss = signer.address
+       self.receiverAddrss = receiver
     }
 
     execute {

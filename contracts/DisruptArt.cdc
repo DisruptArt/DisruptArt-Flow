@@ -2,7 +2,7 @@
 // NFT Marketplace : www.DisruptArt.io
 // Owner           : Disrupt Art, INC.
 // Developer       : www.blaze.ws
-// Version         : 0.0.4
+// Version         : 0.0.5
 // Blockchain      : Flow www.onFlow.org
 
 import NonFungibleToken from "./NonFungibleToken.cdc"
@@ -23,6 +23,9 @@ pub contract DisruptArt: NonFungibleToken {
 
     /// Path where the public capability for the `Collection` is
     pub let disruptArtPublicPath: PublicPath
+
+    /// NFT Minter
+    pub let disruptArtMinterPath: StoragePath
     
     // Contract Events
     pub event ContractInitialized()
@@ -116,6 +119,15 @@ pub contract DisruptArt: NonFungibleToken {
 
         }
 
+        destroy(){
+            destroy self.ownedNFTs
+        }
+
+    }
+
+    // NFT MINTER
+    pub resource NFTMinter {
+
         // Function to mint group of tokens
         pub fun GroupMint(recipient: &{DisruptArtCollectionPublic},content:String, description:String, name:String, edition:UInt) {
             pre {
@@ -139,11 +151,6 @@ pub contract DisruptArt: NonFungibleToken {
             recipient.deposit(token: <- token)
             DisruptArt.totalSupply = DisruptArt.totalSupply + 1 as UInt64
         } 
-
-        destroy(){
-            destroy self.ownedNFTs
-        }
-
     }
 
     // This is used to create the empty collection. without this address cannot access our NFT token
@@ -171,11 +178,16 @@ pub contract DisruptArt: NonFungibleToken {
 
         self.disruptArtPublicPath = /public/DisruptArtNFTPublicCollection
 
+        self.disruptArtMinterPath = /storage/DisruptArtNFTMinter
+
         self.account.save(<-self.createEmptyCollection(), to: self.disruptArtStoragePath)
 
         self.account.link<&{DisruptArtCollectionPublic}>(self.disruptArtPublicPath, target:self.disruptArtStoragePath)
 
         self.account.save(<-create self.Admin(), to: /storage/DirsuptArtAdmin)
+
+        // store a minter resource in account storage
+        self.account.save(<-create NFTMinter(), to: self.disruptArtMinterPath)
 
         emit ContractInitialized()
 

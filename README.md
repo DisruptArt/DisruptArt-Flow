@@ -25,22 +25,28 @@ flow transactions send transactions/mint.cdc --arg String:"Art" --arg String:"ar
 ## transactions/changeprice.cdc - Change price of the listed tokens
 flow transactions send transactions/changeprice.cdc --arg UFix64:11.0 --network="testnet" --signer="testnet-account"
 
-Note: add tokenids inside the file transactions/listforsale.cdc
-
 ## transactions/listforsale.cdc - List NFT tokens in market
 flow transactions send transactions/listforsale.cdc  --arg UFix64:11.0 --network="testnet" --signer="testnet-account"
 
-Note: add tokenids inside the file transactions/listforsale.cdc
 
 ## transactions/purchase.cdc - Purchase group of NFT tokens
 flow transactions send transactions/purchase.cdc --arg UFix64:11.0 --arg Address:0x1592be4ab7835516 --network="testnet" --signer="testnet2-account"
 
-Note: add tokenids inside the file transactions/listforsale.cdc
 
 ## transactions/withdraw.cdc - Withdraw a tokens from market
 flow transactions send transactions/withdraw.cdc --network="testnet"  --signer="testnet-account"
 
-Note: add tokenids inside the file transactions/listforsale.cdc
+## transactions/listauction.cdc - List NFT in auction
+flow transactions send transactions/listauction.cdc --arg UFix64:2.0 --arg UFix64:1.0 --arg Fix64:1630567277.0 --arg UInt64:37 --network="testnet" --signer="testnet-account"
+
+## transactions/cancelauction.cdc - Cancel an auction
+flow transactions send transactions/cancelauction.cdc --arg UInt64:6 --network="testnet" --signer="testnettest-account"
+
+## transactions/placebid.cdc - Place a bid 
+flow transactions send transactions/placebid.cdc --arg UInt64:3 --arg Address:0x9229f7ab4ba8e2b4 --arg UFix64:1.9 --network="testnet" --signer="testnettest-account"
+
+## transactions/settle.cdc - Auction settlement
+flow transactions send transactions/settle.cdc --arg UInt64:6 --arg Address:0x764e4e765a52e26b --network="testnet" --signer="testnettest-account"
 
 # Scripts
 
@@ -55,3 +61,8 @@ flow scripts execute scripts/gettokenprice.cdc --arg Address:"0x1592be4ab7835516
 
 ## scripts/gettoken.cdc - Returns a token
 flow scripts execute scripts/gettoken.cdc --arg Address:"0x1592be4ab7835516" --arg UInt64:1 --network="testnet"
+
+## scripts/getstatus.cdc - Returns auction status
+flow scripts execute scripts/getids.cdc --arg Address:"0x764e4e765a52e26b" --network="testnet"
+
+

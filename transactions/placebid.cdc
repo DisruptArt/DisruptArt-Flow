@@ -22,19 +22,19 @@ transaction(auctionid:UInt64,seller:Address,amount:UFix64) {
 
     prepare(account: AuthAccount) {
 
-        if account.borrow<&DisruptArtAuction.AuctionCollection>(from: /storage/NFTAuction) == nil {
+        if account.borrow<&DisruptArtAuction.AuctionCollection>(from: DisruptArtAuction.auctionStoragePath) == nil {
             // create a new sale object
             // initializing it with the reference to the owner's Vault
             let auction <- DisruptArtAuction.createAuctionCollection()
 
             // store the sale resource in the account for storage
-            account.save(<-auction, to: /storage/NFTAuction)
+            account.save(<-auction, to: DisruptArtAuction.auctionStoragePath)
 
            // create a public capability to the sale so that others
            // can call it's methods
            account.link<&{DisruptArtAuction.AuctionPublic}>(
-              /public/NFTAuction,
-              target: /storage/NFTAuction
+              DisruptArtAuction.auctionPublicPath,
+              target: DisruptArtAuction.auctionStoragePath
            )
 
            log("Auction Collection and public capability created.")
@@ -58,7 +58,7 @@ transaction(auctionid:UInt64,seller:Address,amount:UFix64) {
         let seller = getAccount(seller)
 
         // get the reference to the seller's sale
-        let auctionRef = seller.getCapability(/public/NFTAuction)!
+        let auctionRef = seller.getCapability(DisruptArtAuction.auctionPublicPath)!
                          .borrow<&AnyResource{DisruptArtAuction.AuctionPublic}>()
                          ?? panic("Could not borrow seller's sale reference")
 

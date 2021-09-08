@@ -20,6 +20,12 @@ pub contract DisruptArtAuction {
     pub event AuctionSettled(auctionID: UInt64, price: UFix64)
     pub event Canceled(auctionID: UInt64)
 
+    // Auction Storage Path
+    pub let auctionStoragePath: StoragePath
+
+    /// Auction Public Path
+    pub let auctionPublicPath: PublicPath
+
     // AuctionItem contains the Resources and metadata for a single auction
     pub resource AuctionItem {
         
@@ -220,6 +226,7 @@ pub contract DisruptArtAuction {
             
             pre {
                 Fix64(getCurrentBlock().timestamp) < endTime : "endtime should greater than current time"
+                minimumBidIncrement > 0.0 : "minimumBidIncrement should greater than 0.0"
             }
 
             let bidtoken <-token as! @DisruptArt.NFT
@@ -519,6 +526,8 @@ pub contract DisruptArtAuction {
 
     init() {
         self.totalAuctions = UInt64(0)
+        self.auctionStoragePath= /storage/DisruptArtAuction
+        self.auctionPublicPath= /public/DisruptArtAuction
     }   
 }
  

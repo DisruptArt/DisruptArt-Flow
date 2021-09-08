@@ -13,7 +13,7 @@ transaction(auctionid:UInt64) {
 
     prepare(account: AuthAccount) {
 
-        self.vaultCap = account.borrow<&DisruptArtAuction.AuctionCollection>(from: /storage/NFTAuction)
+        self.vaultCap = account.borrow<&DisruptArtAuction.AuctionCollection>(from: DisruptArtAuction.auctionStoragePath)
             ?? panic("Could not borrow owner's auction collection")
     }
 

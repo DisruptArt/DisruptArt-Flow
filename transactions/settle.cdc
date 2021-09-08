@@ -14,7 +14,7 @@ transaction(auctionid:UInt64,seller:Address) {
 
     prepare(account: AuthAccount) {
 
-        self.vaultCap = account.borrow<&DisruptArtAuction.AuctionCollection>(from: /storage/NFTAuction)
+        self.vaultCap = account.borrow<&DisruptArtAuction.AuctionCollection>(from: DisruptArtAuction.auctionStoragePath)
             ?? panic("Could not borrow owner's auction collection")
     }
 
@@ -22,7 +22,7 @@ transaction(auctionid:UInt64,seller:Address) {
         let seller = getAccount(seller)
 
         // get the reference to the seller's sale
-        let auctionRef = seller.getCapability(/public/NFTAuction)!
+        let auctionRef = seller.getCapability(DisruptArtAuction.auctionPublicPath)!
                          .borrow<&AnyResource{DisruptArtAuction.AuctionPublic}>()
                          ?? panic("Could not borrow seller's sale reference")
 

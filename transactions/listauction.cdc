@@ -14,19 +14,19 @@ transaction(startprice:UFix64,minimumincrement:UFix64,endtime:Fix64,tokenid:UInt
 
     prepare(account: AuthAccount) {
 
-        if account.borrow<&DisruptArtAuction.AuctionCollection>(from: /storage/NFTAuction) == nil {
+        if account.borrow<&DisruptArtAuction.AuctionCollection>(from: DisruptArtAuction.auctionStoragePath) == nil {
             // create a new sale object     
             // initializing it with the reference to the owner's Vault
             let auction <- DisruptArtAuction.createAuctionCollection()
 
             // store the sale resource in the account for storage
-            account.save(<-auction, to: /storage/NFTAuction)
+            account.save(<-auction, to: DisruptArtAuction.auctionStoragePath)
 
            // create a public capability to the sale so that others
            // can call it's methods
            account.link<&{DisruptArtAuction.AuctionPublic}>(
-              /public/NFTAuction,
-              target: /storage/NFTAuction
+              DisruptArtAuction.auctionPublicPath,
+              target: DisruptArtAuction.auctionStoragePath
            )
 
            log("Auction Collection and public capability created.")
@@ -41,7 +41,7 @@ transaction(startprice:UFix64,minimumincrement:UFix64,endtime:Fix64,tokenid:UInt
        let vaultCap = account.getCapability<&{FungibleToken.Receiver}>(/public/fusdReceiver) 
 
        // borrow a reference to the Auction Collection in account storage
-       let auctionCollectionRef = account.borrow<&DisruptArtAuction.AuctionCollection>(from: /storage/NFTAuction)!
+       let auctionCollectionRef = account.borrow<&DisruptArtAuction.AuctionCollection>(from: DisruptArtAuction.auctionStoragePath)!
 
        // Create an empty bid Vault for the auction
        let bidVault <- FUSD.createEmptyVault()

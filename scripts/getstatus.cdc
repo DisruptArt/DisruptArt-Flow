@@ -10,7 +10,7 @@ pub fun main(account:Address): {UInt64:Bool} {
     let account1 = getAccount(account)
 
     // find the public Sale Collection capability
-    let auctionCap = account1.getCapability(/public/NFTAuction)
+    let auctionCap = account1.getCapability(DisruptArtAuction.auctionPublicPath)
 
     let auctionRef = auctionCap.borrow<&{DisruptArtAuction.AuctionPublic}>()??
         panic("unable to borrow a reference to the Auction collection for account 1")

@@ -17,10 +17,10 @@
 flow transactions send transactions/fusd.cdc -n=testnet --signer="testnet-account"
 
 ## transactions/multiplemint.cdc - Mint multiple copies of NFT tokens
-flow transactions send transactions/multiplemint.cdc --arg String:"Art" --arg String:"art description" --arg String:"Art title" --arg UInt:2 --network=testnet --signer="testnet-account"
+flow transactions send transactions/multiplemint.cdc --arg String:"Art" --arg String:"art description" --arg String:"Art title" --arg UInt:2 --arg Address:"0x1592be4ab7835516" --network=testnet --signer="testnet-account"
 
 ## transactions/singlemint.cdc - Mint a NFT token
-flow transactions send transactions/mint.cdc --arg String:"Art" --arg String:"art description" --arg String:"Art title" --network=testnet --signer="testnet-account"
+flow transactions send transactions/mint.cdc --arg String:"Art" --arg String:"art description" --arg String:"Art title" --arg Address:"0x1592be4ab7835516" --network=testnet --signer="testnet-account"
 
 ## transactions/changeprice.cdc - Change price of the listed tokens
 flow transactions send transactions/changeprice.cdc --arg UFix64:11.0 --network="testnet" --signer="testnet-account"
@@ -63,6 +63,6 @@ flow scripts execute scripts/gettokenprice.cdc --arg Address:"0x1592be4ab7835516
 flow scripts execute scripts/gettoken.cdc --arg Address:"0x1592be4ab7835516" --arg UInt64:1 --network="testnet"
 
 ## scripts/getstatus.cdc - Returns auction status
-flow scripts execute scripts/getids.cdc --arg Address:"0x764e4e765a52e26b" --network="testnet"
+flow scripts execute scripts/getstatus.cdc --arg Address:"0x764e4e765a52e26b" --network="testnet"
 
 

@@ -5,7 +5,7 @@
 
 import DisruptArtAuction from "../contracts/DisruptArtAuction.cdc"
 
-pub fun main(account:Address): {UInt64:Bool} {
+pub fun main(account:Address): {UInt64:DisruptArtAuction.AuctionStatus} {
     // get the public account object for account 1
     let account1 = getAccount(account)
 

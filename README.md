@@ -2,8 +2,10 @@
 Flow blockchain based NFT marketplace with multiple minting, auction, multi format content (Video, Audio, Image) NFT minting with IPFS storage support. Blocto, Dapper & Ledger wallets are integrated for fast and secure payments. Moon Pay payment gateway is also integrated for fast FUSD / Flow purchases as well as NFT purchase with Fiat / Credit Card & additional payment options.
 
 Owner : Disrupt Art, INC. 
-Marketplace: [https://www.disrupt.art] (https://www.disrupt.art)
-Developer : [https://www.BLAZE.ws] (https://www.BLAZE.ws)
+
+Marketplace: https://www.disrupt.art
+
+Developer : https://www.BLAZE.ws
 
 # Testnet
    Address : 0xe1392621e26c3274

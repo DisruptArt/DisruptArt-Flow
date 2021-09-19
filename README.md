@@ -1,10 +1,10 @@
-# DisruptArt.io NFT Marketplace Smart Contracts
-    NFT Token and Marketplace smart contracts of DisruptArt.io
-
-    Owner : Disrupt Art, INC. https://www.DisruptArt.io
-    NFT Marketplace : https://www.DisruptArt.io/nft
+# DISRUPT.ART NFT Marketplace Smart Contracts
+    
+    Owner : Disrupt Art, INC. https://www.disrupt.art
+    NFT Marketplace : https://www.disrupt.art/nft
     Developer : https://www.BLAZE.ws
 
+Flow blockchain based NFT marketplace with multiple minting, auction, multi format content (Video, Audio, Image) NFT minting with IPFS storage support. Blocto, Dapper & Ledger wallets are integrated for fast and secure payments. Moon Pay payment gateway is also integrated for fast FUSD / Flow purchases as well as NFT purchase with Fiat / Credit Card & additional payment options.
 
 # Testnet
    Address : 0xe1392621e26c3274
@@ -28,10 +28,8 @@ flow transactions send transactions/changeprice.cdc --arg UFix64:11.0 --network=
 ## transactions/listforsale.cdc - List NFT tokens in market
 flow transactions send transactions/listforsale.cdc  --arg UFix64:11.0 --network="testnet" --signer="testnet-account"
 
-
 ## transactions/purchase.cdc - Purchase group of NFT tokens
 flow transactions send transactions/purchase.cdc --arg UFix64:11.0 --arg Address:0x1592be4ab7835516 --network="testnet" --signer="testnet2-account"
-
 
 ## transactions/withdraw.cdc - Withdraw a tokens from market
 flow transactions send transactions/withdraw.cdc --network="testnet"  --signer="testnet-account"

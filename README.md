@@ -5,7 +5,7 @@ Owner : Disrupt Art, INC.
 
 Marketplace: https://www.disrupt.art
 
-Developer : https://www.BLAZE.ws
+Developer : https://www.blaze.ws
 
 # Testnet
    Address : 0xe1392621e26c3274

@@ -131,9 +131,9 @@ pub contract DisruptArtMarketplace {
 
         self.creators[id] = token.creator
 
-        self.seller[id] = token.owner?.address
+        self.seller[id] = self.owner?.address
 
-        self.resale[id] = (token.creator == token.owner?.address) ? false : true
+        self.resale[id] = (token.creator == self.owner?.address) ? false : true
 
         // Put NFT into the forSale dictionary
         let oldToken <- self.forSale[id] <- token

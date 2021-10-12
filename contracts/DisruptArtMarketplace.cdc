@@ -3,7 +3,7 @@
 // NFT Marketplace : www.disrupt.art
 // Owner           : Disrupt Art, INC.
 // Developer       : www.blaze.ws
-// Version         : 0.0.4
+// Version         : 0.0.5
 // Blockchain      : Flow www.onFlow.org
 
 

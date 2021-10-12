@@ -406,7 +406,7 @@ pub contract DisruptArtAuction {
             
             let tokenID = bidtoken.id
 
-            let resale = (bidtoken.creator == bidtoken.owner?.address) ? false : true
+            let resale = (bidtoken.creator == self.owner?.address) ? false : true
 
             let creator = bidtoken.creator 
 

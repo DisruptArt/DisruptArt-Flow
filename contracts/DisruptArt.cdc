@@ -68,6 +68,15 @@ pub contract DisruptArt: NonFungibleToken {
         pub fun getIDs(): [UInt64]
 
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT
+        
+        pub fun borrowDisruptArt(id: UInt64): &DisruptArt.NFT? {
+            // If the result isn't nil, the id of the returned reference
+            // should be the same as the argument to the function
+            post {
+                (result == nil) || (result?.id == id):
+                    "Cannot borrow CaaPass reference: The ID of the returned reference is incorrect"
+            }
+        }
 
     } 
 
@@ -103,6 +112,16 @@ pub contract DisruptArt: NonFungibleToken {
         // function returns token data of token id
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT {
             return &self.ownedNFTs[id] as &NonFungibleToken.NFT
+        }
+        
+        // Gets a reference to an NFT in the collection as a DisruptArt
+        pub fun borrowDisruptArt(id: UInt64): &DisruptArt.NFT? {
+            if self.ownedNFTs[id] != nil {
+                let ref = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT
+                return ref as! &DisruptArt.NFT
+            } else {
+                return nil
+            }
         }
 
         // function to check wether the owner have token or not

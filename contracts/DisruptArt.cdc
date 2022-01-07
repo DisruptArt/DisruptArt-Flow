@@ -14,8 +14,7 @@ pub contract DisruptArt: NonFungibleToken {
    
     // Total number of token supply
     pub var totalSupply: UInt64
-    // Total number of token groups
-    pub var tokenGroupsCount: UInt64
+
     // NFT No of Editions(Multiple copies) limit
     pub var editionLimit: UInt
 
@@ -149,16 +148,16 @@ pub contract DisruptArt: NonFungibleToken {
     pub resource NFTMinter {
 
         // Function to mint group of tokens
-        pub fun GroupMint(recipient: &{DisruptArtCollectionPublic},content:String, description:String, name:String, edition:UInt) {
+        pub fun GroupMint(recipient: &{DisruptArtCollectionPublic},content:String, description:String, name:String, edition:UInt, tokenGroupId:UInt64) {
             pre {
                 DisruptArt.editionLimit >= edition : "Edition count exceeds the limit"
                 edition >=2 : "Edition count should be greater than or equal to 2"
             }
             var count = 0 as UInt
-            DisruptArt.tokenGroupsCount = DisruptArt.tokenGroupsCount + 1 as UInt64
+            
             while count < edition {
                 let token <- create NFT(id: DisruptArt.totalSupply, content:content, name:name, description:description, creator: recipient.owner?.address)
-                emit GroupMint(id:DisruptArt.totalSupply,content:content,owner: recipient.owner?.address, name:name, tokenGroupId:DisruptArt.tokenGroupsCount)
+                emit GroupMint(id:DisruptArt.totalSupply,content:content,owner: recipient.owner?.address, name:name, tokenGroupId:tokenGroupId)
                 recipient.deposit(token: <- token)
                 DisruptArt.totalSupply = DisruptArt.totalSupply + 1 as UInt64
                 count = count + 1
@@ -189,8 +188,6 @@ pub contract DisruptArt: NonFungibleToken {
 
         // total supply is zero at the time of contract deployment
         self.totalSupply = 0
-
-        self.tokenGroupsCount = 0
 
         self.editionLimit = 50
 

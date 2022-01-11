@@ -536,7 +536,7 @@ pub contract DisruptArtAuctionFlow {
     }
 
     init() {
-        self.totalAuctions = UInt64(0)
+        self.totalAuctions = UInt64(15)
         self.auctionStoragePath= /storage/DisruptArtAuctionFlow
         self.auctionPublicPath= /public/DisruptArtAuctionFlow
     }   

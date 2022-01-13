@@ -42,7 +42,7 @@ pub contract DisruptArt: NonFungibleToken {
         pub let id :UInt64
 
         // Meta data to store token data (use dict for data)
-        access(self) let metaData: {String : String}
+        pub let metaData: {String : String}
 
         // NFT token name
         pub let name:String

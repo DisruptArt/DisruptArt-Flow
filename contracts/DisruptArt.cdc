@@ -51,9 +51,9 @@ pub contract DisruptArt: NonFungibleToken {
         pub let creator:Address?
 
         // In current store static dict in meta data
-        init( id : UInt64, content : String, name:String, description:String , creator:Address?) {
+        init( id : UInt64, content : String, name:String, description:String , creator:Address?,previewContent:String,mimeType:String) {
             self.id = id
-            self.metaData = {"content" : content, "description": description}
+            self.metaData = {"content" : content, "description": description, "previewContent":previewContent, "mimeType":mimeType }
             self.creator = creator
             self.name = name
         }
@@ -148,7 +148,7 @@ pub contract DisruptArt: NonFungibleToken {
     pub resource NFTMinter {
 
         // Function to mint group of tokens
-        pub fun GroupMint(recipient: &{DisruptArtCollectionPublic},content:String, description:String, name:String, edition:UInt, tokenGroupId:UInt64) {
+        pub fun GroupMint(recipient: &{DisruptArtCollectionPublic},content:String, description:String, name:String, edition:UInt, tokenGroupId:UInt64, previewContent:String, mimeType:String) {
             pre {
                 DisruptArt.editionLimit >= edition : "Edition count exceeds the limit"
                 edition >=2 : "Edition count should be greater than or equal to 2"
@@ -156,7 +156,7 @@ pub contract DisruptArt: NonFungibleToken {
             var count = 0 as UInt
             
             while count < edition {
-                let token <- create NFT(id: DisruptArt.totalSupply, content:content, name:name, description:description, creator: recipient.owner?.address)
+                let token <- create NFT(id: DisruptArt.totalSupply, content:content, name:name, description:description, creator: recipient.owner?.address,previewContent:previewContent,mimeType:mimeType)
                 emit GroupMint(id:DisruptArt.totalSupply,content:content,owner: recipient.owner?.address, name:name, tokenGroupId:tokenGroupId)
                 recipient.deposit(token: <- token)
                 DisruptArt.totalSupply = DisruptArt.totalSupply + 1 as UInt64
@@ -164,8 +164,8 @@ pub contract DisruptArt: NonFungibleToken {
             }
         }
 
-        pub fun Mint(recipient: &{DisruptArtCollectionPublic},content:String, name:String, description:String) {
-            let token <- create NFT(id: DisruptArt.totalSupply, content:content, name:name, description:description, creator: recipient.owner?.address)
+        pub fun Mint(recipient: &{DisruptArtCollectionPublic},content:String, name:String, description:String,previewContent:String,mimeType:String ) {
+            let token <- create NFT(id: DisruptArt.totalSupply, content:content, name:name, description:description, creator: recipient.owner?.address,previewContent:previewContent, mimeType:mimeType)
             emit Mint(id:DisruptArt.totalSupply,content:content,owner: recipient.owner?.address, name:name)
             recipient.deposit(token: <- token)
             DisruptArt.totalSupply = DisruptArt.totalSupply + 1 as UInt64

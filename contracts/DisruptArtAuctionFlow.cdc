@@ -3,7 +3,7 @@
 // NFT Marketplace : www.disrupt.art
 // Owner           : Disrupt Art, INC.
 // Developer       : www.blaze.ws
-// Version         : 0.0.
+// Version         : 0.0.1
 // Blockchain      : Flow www.onFlow.org
 
 import FungibleToken from 0x9a0766d93b6608b7

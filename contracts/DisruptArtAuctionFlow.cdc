@@ -10,6 +10,7 @@ import FungibleToken from 0x9a0766d93b6608b7
 import DisruptArt from "./DisruptArt.cdc"
 import NonFungibleToken from "./NonFungibleToken.cdc"
 import DisruptArtMarketplaceFlow from "./DisruptArtMarketplaceFlow.cdc"
+import DisruptArtAuction from "./DisruptArtAuction.cdc"
 
 pub contract DisruptArtAuctionFlow {
 
@@ -536,7 +537,7 @@ pub contract DisruptArtAuctionFlow {
     }
 
     init() {
-        self.totalAuctions = UInt64(50)
+        self.totalAuctions = DisruptArtAuction.totalAuctions
         self.auctionStoragePath= /storage/DisruptArtAuctionFlow
         self.auctionPublicPath= /public/DisruptArtAuctionFlow
     }   

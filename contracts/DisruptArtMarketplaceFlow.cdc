@@ -336,7 +336,7 @@ pub contract DisruptArtMarketplaceFlow {
   }
 
   init() {
-    self.marketAddress = 0x1592be4ab7835516
+    self.marketAddress = 0x420f47f16a214100
     // 5% Marketplace Fee
     self.marketFee = 5.0
     // 10% Royalty reward for original creater / minter for every re-sale

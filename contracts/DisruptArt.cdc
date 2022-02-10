@@ -6,7 +6,7 @@
 // Version         : 0.0.6
 // Blockchain      : Flow www.onFlow.org
 
-import NonFungibleToken from "./NonFungibleToken.cdc"
+import NonFungibleToken from 0x1d7e57aa55817448
 
 
 

@@ -193,7 +193,7 @@ pub contract DisruptArt: NonFungibleToken {
         // total supply is zero at the time of contract deployment
         self.totalSupply = 0
 
-        self.editionLimit = 50
+        self.editionLimit = 10000
 
         self.disruptArtStoragePath = /storage/DisruptArtNFTCollection
 

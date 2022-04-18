@@ -7,7 +7,8 @@
 // Blockchain      : Flow www.onFlow.org
 
 import NonFungibleToken from "./NonFungibleToken.cdc"
-
+import MetadataViews from "./MetadataViews.cdc"
+import FungibleToken from 0x9a0766d93b6608b7
 
 
 pub contract DisruptArt: NonFungibleToken {
@@ -36,7 +37,7 @@ pub contract DisruptArt: NonFungibleToken {
 
 
     // TOKEN RESOURCE
-    pub resource NFT: NonFungibleToken.INFT {
+    pub resource NFT: NonFungibleToken.INFT, MetadataViews.Resolver {
 
         // Unique identifier for NFT Token
         pub let id :UInt64
@@ -61,6 +62,47 @@ pub contract DisruptArt: NonFungibleToken {
             self.creator = creator
             self.name = name
         }
+        
+        // fn to get the royality details
+        access(self) fun genRoyalities():[MetadataViews.Royalty] {
+
+            var royalties:[MetadataViews.Royalty] = []             
+
+            royalties.append(
+                MetadataViews.Royalty(
+                    receiver: getAccount(self.creator!).getCapability<&FungibleToken.Vault{FungibleToken.Receiver}>(MetadataViews.getRoyaltyReceiverPublicPath()),
+                    cut: UFix64(0.15),
+                    description: "Creator Royality"
+                )
+            )
+            return royalties
+        }
+        
+        pub fun getViews(): [Type] {
+            return [
+                Type<MetadataViews.Display>(),
+                Type<MetadataViews.Royalties>()
+            ]
+        }
+
+        pub fun resolveView(_ view: Type): AnyStruct? {
+            switch view {
+                case Type<MetadataViews.Display>():
+                    return MetadataViews.Display(
+                        name: self.name,
+                        description: self.metaData["description"]!,
+                        thumbnail: MetadataViews.HTTPFile(
+                            url: self.metaData["previewContent"]!
+                        )
+                    )
+                case Type<MetadataViews.Royalties>():
+                    return MetadataViews.Royalties(
+                        self.genRoyalities()
+                    )
+            }
+            return nil
+        }
+
     }
 
     // Account's public collection
@@ -84,7 +126,7 @@ pub contract DisruptArt: NonFungibleToken {
     } 
 
     // NFT Collection resource
-    pub resource Collection : DisruptArtCollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
+    pub resource Collection : DisruptArtCollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic, MetadataViews.ResolverCollection {
         
         // Contains caller's list of NFTs
         pub var ownedNFTs: @{UInt64 : NonFungibleToken.NFT}
@@ -139,7 +181,12 @@ pub contract DisruptArt: NonFungibleToken {
             emit Withdraw(id: token.id, from: self.owner?.address)
 
             return <-token    
-
+        }
+        
+        pub fun borrowViewResolver(id: UInt64): &AnyResource{MetadataViews.Resolver} {
+            let nft = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT
+            let DisruptArtNFT = nft as! &DisruptArt.NFT
+            return DisruptArtNFT as &AnyResource{MetadataViews.Resolver}
         }
 
         destroy(){

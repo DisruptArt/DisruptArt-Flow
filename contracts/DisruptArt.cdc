@@ -9,6 +9,7 @@
 import NonFungibleToken from 0x1d7e57aa55817448
 import MetadataViews from 0x1d7e57aa55817448
 import FungibleToken from 0xf233dcee88fe0abe
+import DisruptArtRates from 0xcd946ef9b13804c6
 
 pub contract DisruptArt: NonFungibleToken {
    
@@ -62,18 +63,34 @@ pub contract DisruptArt: NonFungibleToken {
             self.name = name
         }
 
-                // fn to get the royality details
+        access(self) fun getFlowRoyaltyReceiverPublicPath(): PublicPath {
+	     return /public/flowTokenReceiver
+        }
+
+
+        // fn to get the royality details
         access(self) fun genRoyalities():[MetadataViews.Royalty] {
 
             var royalties:[MetadataViews.Royalty] = []             
 
+            // Creator Royalty
             royalties.append(
                 MetadataViews.Royalty(
-                    receiver: getAccount(self.creator!).getCapability<&FungibleToken.Vault{FungibleToken.Receiver}>(MetadataViews.getRoyaltyReceiverPublicPath()),
-                    cut: UFix64(0.15),
-                    description: "Creator Royality"
+                    receiver: getAccount(self.creator!).getCapability<&FungibleToken.Vault{FungibleToken.Receiver}>(self.getFlowRoyaltyReceiverPublicPath()),
+                    cut: UFix64(DisruptArtRates.disruptArtCreatorRoyalty),
+                    description: "Creator Royalty"
                 )
             )
+
+            // DisruptArt Market Fee
+            royalties.append(
+                MetadataViews.Royalty(
+                    receiver: getAccount(DisruptArtRates.disruptArtMarketAddress).getCapability<&FungibleToken.Vault{FungibleToken.Receiver}>(self.getFlowRoyaltyReceiverPublicPath()),
+                    cut: UFix64(DisruptArtRates.disruptArtMarketplaceFees),
+                    description: "DisruptArt Market Fee"
+                )
+            )
+
             return royalties
         }
         

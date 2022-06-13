@@ -3,7 +3,7 @@
 // NFT Marketplace : www.disrupt.art
 // Owner           : Disrupt Art, INC.
 // Developer       : www.blaze.ws
-// Version         : 0.0.7
+// Version         : 0.0.8
 // Blockchain      : Flow www.onFlow.org
 
 import NonFungibleToken from 0x1d7e57aa55817448
@@ -172,13 +172,13 @@ pub contract DisruptArt: NonFungibleToken {
 
         // function returns token data of token id
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT {
-            return &self.ownedNFTs[id] as &NonFungibleToken.NFT
+            return (&self.ownedNFTs[id] as &NonFungibleToken.NFT?)!
         }
         
         // Gets a reference to an NFT in the collection as a DisruptArt
         pub fun borrowDisruptArt(id: UInt64): &DisruptArt.NFT? {
             if self.ownedNFTs[id] != nil {
-                let ref = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT
+                let ref = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
                 return ref as! &DisruptArt.NFT
             } else {
                 return nil
@@ -200,7 +200,7 @@ pub contract DisruptArt: NonFungibleToken {
         }
 
         pub fun borrowViewResolver(id: UInt64): &AnyResource{MetadataViews.Resolver} {
-            let nft = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT
+            let nft = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
             let DisruptArtNFT = nft as! &DisruptArt.NFT
             return DisruptArtNFT as &AnyResource{MetadataViews.Resolver}
         }

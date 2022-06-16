@@ -26,7 +26,7 @@ pub contract DisruptArtRates {
   }
 
   init() {
-    self.disruptArtMarketAddress = 0x4e96267cf76199ef
+    self.disruptArtMarketAddress = 0x420f47f16a214100
     // 5% DisruptArt Fee
     self.disruptArtMarketplaceFees = 0.05
     // 10% Royalty reward for original creater / minter for every re-sale
